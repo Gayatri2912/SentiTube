@@ -1,0 +1,62 @@
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+      - src/data_ingestion.py
+    params:
+      - data_ingestion
+    outs:
+      - data/raw/youtube_comments.csv
+
+  data_preprocessing:
+    cmd: python src/data_preprocessing.py
+    deps:
+      - src/data_preprocessing.py
+      - data/raw/youtube_comments.csv
+    params:
+      - preprocessing
+    outs:
+      - data/processed/preprocessed_data.csv
+
+  feature_engineering:
+    cmd: python src/feature_engineering.py
+    deps:
+      - src/feature_engineering.py
+      - data/processed/preprocessed_data.csv
+    params:
+      - feature_engineering
+      - imbalance
+    outs:
+      - data/processed/features.pkl
+      - models/vectorizer.pkl
+
+  model_training:
+    cmd: python src/model_training.py
+    deps:
+      - src/model_training.py
+      - data/processed/features.pkl
+    params:
+      - random_forest
+      - xgboost
+      - lightgbm
+      - mlflow
+    outs:
+      - models/random_forest_model.pkl
+      - models/xgboost_model.pkl
+      - models/lightgbm_model.pkl
+
+  model_evaluation:
+    cmd: python src/model_evaluation.py
+    deps:
+      - src/model_evaluation.py
+      - models/random_forest_model.pkl
+      - models/xgboost_model.pkl
+      - models/lightgbm_model.pkl
+      - data/processed/features.pkl
+    params:
+      - evaluation
+    metrics:
+      - metrics/evaluation_results.json:
+          cache: false
+    outs:
+      - models/best_model.pkl

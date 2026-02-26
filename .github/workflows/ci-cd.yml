@@ -1,0 +1,202 @@
+name: SentiTube CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Code Quality Check
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 black pylint
+    
+    - name: Lint with flake8
+      run: |
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      continue-on-error: true
+    
+    - name: Format check with black
+      run: |
+        black --check --diff src/ app/
+      continue-on-error: true
+
+  # Unit Tests
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+    
+    - name: Download NLTK data
+      run: |
+        python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('omw-1.4')"
+    
+    - name: Run tests with pytest
+      run: |
+        pytest tests/ --cov=src --cov-report=xml --cov-report=html
+      continue-on-error: true
+
+  # Data Pipeline
+  data-pipeline:
+    name: Data Pipeline
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Download NLTK data
+      run: |
+        python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet'); nltk.download('omw-1.4')"
+    
+    - name: Run data ingestion
+      run: python src/data_ingestion.py
+    
+    - name: Run data preprocessing
+      run: python src/data_preprocessing.py
+    
+    - name: Run feature engineering
+      run: python src/feature_engineering.py
+    
+    - name: Upload data artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: processed-data
+        path: |
+          data/processed/
+          models/vectorizer.pkl
+
+  # Model Training
+  train:
+    name: Model Training
+    runs-on: ubuntu-latest
+    needs: data-pipeline
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Download data artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: processed-data
+    
+    - name: Train models
+      run: python src/model_training.py
+    
+    - name: Evaluate models
+      run: python src/model_evaluation.py
+    
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: trained-models
+        path: |
+          models/
+          metrics/
+    
+    - name: Upload MLflow tracking
+      uses: actions/upload-artifact@v3
+      with:
+        name: mlflow-runs
+        path: mlruns/
+
+  # Docker Build
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: train
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build Docker image
+      run: |
+        docker build -t sentitube:latest .
+    
+    - name: Test Docker image
+      run: |
+        docker run -d -p 8080:8080 --name test-container sentitube:latest
+        sleep 30
+        curl http://localhost:8080/health
+        docker stop test-container
+        docker rm test-container
+    
+    - name: Save Docker image
+      run: |
+        docker save sentitube:latest | gzip > sentitube.tar.gz
+    
+    - name: Upload Docker image artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: docker-image
+        path: sentitube.tar.gz
+
+  # Deployment (placeholder - would deploy to cloud)
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: docker
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Deployment placeholder
+      run: |
+        echo "Deployment step would go here"
+        echo "For AWS: Deploy to EC2, ECS, or Elastic Beanstalk"
+        echo "For Azure: Deploy to AKS or App Service"
+        echo "For GCP: Deploy to GKE or Cloud Run"

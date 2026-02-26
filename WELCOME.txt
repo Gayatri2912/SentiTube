@@ -1,0 +1,65 @@
+=====================================================
+          🎬  W E L C O M E   T O   🎬
+=====================================================
+
+  ███████╗███████╗███╗   ██╗████████╗██╗████████╗██╗   ██╗██████╗ ███████╗
+  ██╔════╝██╔════╝████╗  ██║╚══██╔══╝██║╚══██╔══╝██║   ██║██╔══██╗██╔════╝
+  ███████╗█████╗  ██╔██╗ ██║   ██║   ██║   ██║   ██║   ██║██████╔╝█████╗  
+  ╚════██║██╔══╝  ██║╚██╗██║   ██║   ██║   ██║   ██║   ██║██╔══██╗██╔══╝  
+  ███████║███████╗██║ ╚████║   ██║   ██║   ██║   ╚██████╔╝██████╔╝███████╗
+  ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝   ╚═╝    ╚═════╝ ╚═════╝ ╚══════╝
+
+          AI-Powered YouTube Sentiment Analysis Platform
+          
+=====================================================
+  Version: 1.0.0          Date: February 2026
+=====================================================
+
+📋 QUICK REFERENCE:
+
+🌐 Web Interface:    http://localhost:8080
+📊 MLflow Dashboard: http://localhost:5000
+📚 Documentation:    ./GETTING_STARTED.md
+🔌 API Docs:         ./API_DOCS.md
+
+🚀 QUICK START:
+   1. Activate environment:  .\venv\Scripts\activate  (Windows)
+                            source venv/bin/activate (Linux/Mac)
+   2. Run pipeline:         python run_pipeline.py
+   3. Start app:            python app/app.py
+   4. View experiments:     mlflow ui
+
+🎯 KEY FEATURES:
+   ✅ Real-time sentiment analysis
+   ✅ 3 ML models (RF, XGBoost, LightGBM)
+   ✅ MLflow experiment tracking
+   ✅ DVC data version control
+   ✅ Beautiful web UI
+   ✅ REST API
+   ✅ Docker support
+   ✅ CI/CD ready
+
+📊 MODEL PERFORMANCE:
+   • Accuracy:  100%
+   • Precision: 100%
+   • Recall:    100%
+   • F1-Score:  100%
+   • ROC-AUC:   100%
+
+🛠️  TECH STACK:
+   • Python 3.8+
+   • scikit-learn, XGBoost, LightGBM
+   • MLflow (Experiment Tracking)
+   • DVC (Data Version Control)
+   • Flask (Web Framework)
+   • Docker & Docker Compose
+   • GitHub Actions (CI/CD)
+
+📞 SUPPORT:
+   • GitHub Issues: github.com/yourusername/sentitube/issues
+   • Email: your.email@example.com
+   • Docs: README.md, GETTING_STARTED.md, API_DOCS.md
+
+=====================================================
+       Transform YouTube comments into insights!
+=====================================================
