@@ -33,118 +33,6 @@
 - **CI/CD**: GitHub Actions for automated testing and deployment
 - **Interactive API**: Flask web application for predictions
 
-## 🏗️ Project Structure
-
-```
-sentitube/
-├── data/                      # Data directory (DVC tracked)
-│   ├── raw/                   # Raw YouTube comments data
-│   └── processed/             # Processed and feature-engineered data
-├── notebooks/                 # Jupyter notebooks for EDA
-│   └── EDA.ipynb             # Exploratory Data Analysis
-├── src/                       # Source code
-│   ├── data_ingestion.py     # Data loading and collection
-│   ├── data_preprocessing.py # Text preprocessing
-│   ├── feature_engineering.py # TF-IDF and feature creation
-│   ├── model_training.py     # Model training with MLflow
-│   ├── model_evaluation.py   # Model comparison and evaluation
-│   └── prediction.py         # Prediction pipeline
-├── app/                       # Flask web application
-│   ├── app.py                # Web API
-│   └── templates/            # HTML templates
-├── models/                    # Saved models
-├── experiments/              # Experiment configurations
-├── tests/                    # Unit tests
-├── .github/workflows/        # CI/CD pipelines
-├── Dockerfile               # Docker container definition
-├── docker-compose.yml       # Multi-container orchestration
-├── requirements.txt         # Python dependencies
-├── dvc.yaml                 # DVC pipeline definition
-├── params.yaml              # Hyperparameters and configurations
-└── README.md                # This file
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.8+
-- Docker and Docker Compose (optional)
-- Git
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd youtube
-```
-
-2. **Create virtual environment**
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Initialize DVC**
-```bash
-dvc init
-dvc pull  # If data is already versioned
-```
-
-## 📈 Usage
-
-### 1. Data Ingestion
-```bash
-python src/data_ingestion.py
-```
-
-### 2. Run EDA
-```bash
-jupyter notebook notebooks/EDA.ipynb
-```
-
-### 3. Data Preprocessing
-```bash
-python src/data_preprocessing.py
-```
-
-### 4. Feature Engineering
-```bash
-python src/feature_engineering.py
-```
-
-### 5. Train Models with MLflow
-```bash
-python src/model_training.py
-```
-
-View experiments in MLflow UI:
-```bash
-mlflow ui
-```
-Navigate to http://localhost:5000
-
-### 6. Evaluate Models
-```bash
-python src/model_evaluation.py
-```
-
-### 7. Run Prediction API
-```bash
-python app/app.py
-```
-Navigate to http://localhost:8080
-
-### 8. Run with Docker
-```bash
-docker-compose up --build
-```
 
 ## 🔬 Model Experimentation
 
@@ -193,13 +81,12 @@ GitHub Actions workflow includes:
 5. Performance reporting
 
 ## 📝 License
-
 MIT License
 
-## 👥 Contributing
+Author
+--Gayatri Kailaswar
+<img width="1902" height="595" alt="Screenshot 2026-02-26 103632" src="https://github.com/user-attachments/assets/c167c2a1-a560-424d-ba76-4de6fe167606" />
+<img width="1892" height="623" alt="Screenshot 2026-02-26 103645" src="https://github.com/user-attachments/assets/d58ba426-89ad-45b7-b488-24e9f3b9a902" />
+<img width="1919" height="549" alt="Screenshot 2026-02-26 103707" src="https://github.com/user-attachments/assets/09e2e4e5-d7ca-47c1-aa07-58885f0f9194" />
 
-Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📧 Contact
-
-For questions or feedback, please open an issue.
